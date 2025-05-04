@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 import time
 import pyautogui
 from tkinter import messagebox
@@ -37,7 +38,7 @@ class LeagueAutoLoginApp:
         self.canvas = tb.Canvas(self.root, width=WINDOW_SIZE[0], height=WINDOW_SIZE[1])
         self.canvas.pack(fill="both", expand=True)
 
-        self.set_background("background.jpeg")
+        self.set_background(resource_path("background.jpeg"))
         self.create_widgets()
         self.place_widgets()
 
@@ -111,6 +112,14 @@ class LeagueAutoLoginApp:
                 self.pass_entry.insert(0, acc['password'])
                 break
 
+    def find_username_field(self):
+        images = ["username_field.png", "username_field_alt.png"]
+        for img in images:
+            pos = pyautogui.locateCenterOnScreen(resource_path(img), confidence=0.8)
+            if pos:
+                return pos
+        return None
+
     def login(self):
         acc = next((a for a in self.accounts if a['username'] == self.selected.get()), None)
         if not acc:
@@ -118,20 +127,23 @@ class LeagueAutoLoginApp:
             return
 
         self.root.withdraw()
-        time.sleep(1)
 
-        user_field = pyautogui.locateCenterOnScreen("username_field.png", confidence=0.8)
-        if not user_field:
-            messagebox.showerror("Error", "Username field not found.")
-            return
+        try:
+            user_field = self.find_username_field()
+            if not user_field:
+                raise Exception("Username field not found.")
 
-        pyautogui.click(user_field)
-        time.sleep(0.5)
-        pyautogui.write(acc['username'])
-        pyautogui.press('tab')
-        pyautogui.write(acc['password'])
-        pyautogui.press('enter')
-        self.root.quit()
+            pyautogui.click(user_field)
+            pyautogui.write(acc['username'])
+            pyautogui.press('tab')
+            pyautogui.write(acc['password'])
+            pyautogui.press('enter')
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+        finally:
+            self.root.iconify()
 
     def add_account(self):
         new_user = self.user_entry.get().strip()
@@ -181,8 +193,18 @@ class LeagueAutoLoginApp:
         self.pass_entry.insert(0, "Password")
 
 
+def resource_path(filename):
+    """Get absolute path to resource, works for dev and for PyInstaller .exe"""
+    if getattr(sys, 'frozen', False):  # running as bundled exe
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, filename)
+
+
 # ---- Run App ----
 if __name__ == "__main__":
     root = tb.Window(themename="pulse")
+    root.iconbitmap(resource_path("icon.ico"))
     app = LeagueAutoLoginApp(root)
     root.mainloop()

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riot Auto Login</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        // Global error handler
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error("Global error:", message, "at", source, "line", lineno, "col", colno);
+            showErrorMessage("JavaScript error: " + message);
+            return true;
+        };
+
+        // Show error message in UI
+        function showErrorMessage(message) {
+            var errorDiv = document.getElementById('error-messages');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'error-messages';
+                errorDiv.className = 'error-messages';
+                document.body.appendChild(errorDiv);
+            }
+            var msgElement = document.createElement('p');
+            msgElement.textContent = message;
+            errorDiv.appendChild(msgElement);
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>League Auto Login</h1>
+        </div>
+        
+        
+        <div class="account-selector">
+            <label for="account-select">Select Account</label>
+            <select id="account-select">
+                <option value="" disabled selected>Select an account</option>
+                <!-- Accounts will be loaded here -->
+            </select>
+            <button id="login-btn" class="btn primary full-width">Login</button>
+        </div>
+        
+        <div class="account-form">
+            <h2>Account Details</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            <div class="form-group">
+                <label for="region">Region</label>
+                <select id="region">
+                    <!-- Regions will be loaded here -->
+                </select>
+            </div>
+            <div class="button-group">
+                <button id="save-btn" class="btn primary">Save</button>
+                <button id="delete-btn" class="btn danger">Delete</button>
+            </div>
+        </div>
+        
+        <div id="notification" class="notification hidden">
+            <span id="notification-message"></span>
+            <button id="notification-close">&times;</button>
+        </div>
+        
+        <!-- Confirmation Dialog -->
+        <div id="confirm-dialog" class="modal hidden">
+            <div class="modal-content">
+                <h3 id="confirm-title">Confirm Delete</h3>
+                <p id="confirm-message">Are you sure you want to delete this account?</p>
+                <div class="button-group">
+                    <button id="confirm-cancel" class="btn">Cancel</button>
+                    <button id="confirm-ok" class="btn primary">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Connection status check has been removed
+    </script>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html> 

@@ -1,39 +1,37 @@
-# League Auto Login
+# Riot Auto Login
 
-A modern desktop application to manage your League of Legends accounts and automate the login process.
+A lightweight desktop application to manage your Riot Games accounts and automate the login process.
 
 ## Features
 
-- Modern HTML/CSS/JS interface using PyWebView
-- Add, edit and delete League of Legends accounts
-- Select from all available regions
+- Modern frameless user interface using PyWebView
+- Add, edit and delete Riot Games accounts
+- Support for all Riot Games regions
 - Secure local storage of account information
-- Automated login to League client
-- Clean and user-friendly interface
+- One-click login to Riot Games clients
+- Clean and minimal interface
 
 ## Requirements
 
 - Python 3.8+
-- PyWebView
-- PyAutoGUI
-- Pillow (PIL)
+- Required libraries: pywebview, bottle, pyautogui
 
 ## Installation
 
 1. Clone this repository:
 ```
-git clone https://github.com/yourusername/LeagueAutoLogin.git
-cd LeagueAutoLogin
+git clone https://github.com/yourusername/LeagueOn.git
+cd LeagueOn
 ```
 
-2. Install requirements:
+2. Install dependencies:
 ```
 pip install -r requirements.txt
 ```
 
 3. Run the application:
 ```
-python app.py
+python main.py
 ```
 
 ## Building Executable
@@ -42,45 +40,31 @@ To build a standalone executable:
 
 ```
 pip install pyinstaller
-pyinstaller --onefile --windowed --name "LeagueAutoLogin" --icon=icon.ico app.py
+pyinstaller RiotAutoLogin.spec
 ```
 
 ## Project Structure
 
 ```
-LeagueAutoLogin/
-├── app.py                  # Main application entry point
-├── models/                 # Data models
-│   ├── __init__.py
-│   └── account.py          # Account management
+LeagueOn/
+├── main.py                 # Entry point
+├── app.py                  # UI and server implementation
 ├── controllers/            # Business logic
-│   ├── __init__.py
-│   └── login_controller.py # Login functionality
+│   └── login_controller.py # League login functionality
 ├── web/                    # Web UI
 │   ├── templates/          # HTML templates
-│   │   └── index.html
 │   └── static/             # Static assets
 │       ├── css/
-│       │   └── styles.css
 │       ├── js/
-│       │   └── app.js
 │       └── images/
-│           └── background.jpg
-├── icon.ico                # Application icon
-├── background.jpeg         # Background image
-├── accounts.json           # Saved accounts
+├── accounts.json           # Saved accounts data
 └── README.md
 ```
 
-## Security
+## Security Note
 
-Account information is stored locally in a JSON file. Passwords are stored in plaintext, so be careful with this file if you're concerned about security.
+Account information is stored locally in a JSON file. Please be aware that passwords are stored in plaintext, so ensure the security of this file.
 
-## License
+## Disclaimer
 
-This project is open source and available under the MIT License.
-
-## Acknowledgments
-
-- League of Legends is a registered trademark of Riot Games, Inc.
-- This application is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. 
+This application is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games products. 

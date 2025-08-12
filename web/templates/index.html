@@ -4,18 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riot Auto Login</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script>
         // Global error handler
         window.onerror = function(message, source, lineno, colno, error) {
             console.error("Global error:", message, "at", source, "line", lineno, "col", colno);
-            showErrorMessage("JavaScript error: " + message);
-            return true;
-        };
-
-        // Show error message in UI
-        function showErrorMessage(message) {
+            
+            // Create error display if it doesn't exist
             var errorDiv = document.getElementById('error-messages');
             if (!errorDiv) {
                 errorDiv = document.createElement('div');
@@ -23,25 +19,41 @@
                 errorDiv.className = 'error-messages';
                 document.body.appendChild(errorDiv);
             }
+            
+            // Add error message
             var msgElement = document.createElement('p');
-            msgElement.textContent = message;
+            msgElement.textContent = "JavaScript error: " + message;
             errorDiv.appendChild(msgElement);
             errorDiv.style.display = 'block';
-        }
+            
+            return true;
+        };
+        
+        // PyWebView ready event listener
+        window.addEventListener('pywebviewready', function() {
+            var container = document.getElementById('pywebview-status')
+            container.innerHTML = '<i>pywebview</i> is ready'
+        });
     </script>
 </head>
 <body>
+    <!-- Window drag bar -->
+    <div class="window-drag-bar pywebview-drag-region" id="drag-region">
+        <div class="window-buttons">
+            <button id="minimize-btn" class="window-btn minimize-btn" title="Minimize">—</button>
+            <button id="close-btn" class="window-btn close-btn" title="Close">×</button>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
-            <h1>League Auto Login</h1>
+            <h1>Riot Auto Login</h1>
         </div>
-        
         
         <div class="account-selector">
             <label for="account-select">Select Account</label>
             <select id="account-select">
                 <option value="" disabled selected>Select an account</option>
-                <!-- Accounts will be loaded here -->
             </select>
             <button id="login-btn" class="btn primary full-width">Login</button>
         </div>
@@ -58,9 +70,7 @@
             </div>
             <div class="form-group">
                 <label for="region">Region</label>
-                <select id="region">
-                    <!-- Regions will be loaded here -->
-                </select>
+                <select id="region"></select>
             </div>
             <div class="button-group">
                 <button id="save-btn" class="btn primary">Save</button>
@@ -68,6 +78,7 @@
             </div>
         </div>
         
+        <!-- Notification area -->
         <div id="notification" class="notification hidden">
             <span id="notification-message"></span>
             <button id="notification-close">&times;</button>
@@ -86,10 +97,9 @@
         </div>
     </div>
 
-    <script>
-        // Connection status check has been removed
-    </script>
+    <!-- Load our app code -->
+    <script src="../static/js/app.js"></script>
 
-    <script src="/static/js/app.js"></script>
+
 </body>
 </html> 

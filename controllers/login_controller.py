@@ -3,7 +3,7 @@ import sys
 import pyautogui
 from typing import Optional, Dict, List, Tuple, Any
 
-from models.account import AccountManager, Account
+from models.account import AccountManager
 
 # Define available regions
 REGIONS = [
@@ -29,7 +29,7 @@ REGIONS = [
     "SEA"
 ]
 
-class LeagueLoginController:
+class RiotLoginController:
     def __init__(self):
         self.account_manager = AccountManager()
     
@@ -73,28 +73,80 @@ class LeagueLoginController:
             return {"success": False, "message": "Account not found"}
         
         try:
+            print(f"Attempting to login with account: {username}")
+            
+            # Set pyautogui settings for reliability
+            pyautogui.PAUSE = 0.5  # Half second pause between actions
+            pyautogui.FAILSAFE = True
+            
             user_field = self._find_username_field()
             if not user_field:
-                return {"success": False, "message": "Username field not found"}
+                return {"success": False, "message": "Could not locate username field. Make sure Riot Client is open and visible."}
             
+            print(f"Clicking username field at: {user_field}")
+            
+            # Clear any existing text first
             pyautogui.click(user_field)
-            pyautogui.write(account.username)
+            pyautogui.hotkey('ctrl', 'a')  # Select all
+            pyautogui.press('delete')  # Clear field
+            
+            # Enter username
+            pyautogui.write(account.username, interval=0.1)
+            
+            # Move to password field
             pyautogui.press('tab')
-            pyautogui.write(account.password)
+            
+            # Clear password field and enter password
+            pyautogui.hotkey('ctrl', 'a')  # Select all in password field
+            pyautogui.write(account.password, interval=0.1)
+            
+            # Submit the form
             pyautogui.press('enter')
             
-            return {"success": True, "message": f"Login attempted for '{username}'"}
+            return {"success": True, "message": f"Login attempted for '{username}'. If unsuccessful, ensure Riot Client is open and try positioning your cursor manually."}
+            
         except Exception as e:
-            return {"success": False, "message": f"Error during login: {str(e)}"}
+            error_msg = f"Error during login automation: {str(e)}"
+            print(error_msg)
+            return {"success": False, "message": error_msg}
     
     def _find_username_field(self) -> Optional[Tuple[int, int]]:
         """Find the username input field on screen"""
         images = ["username_field.png", "username_field_alt.png"]
-        for img in images:
-            pos = pyautogui.locateCenterOnScreen(self._resource_path(img), confidence=0.7)
-            if pos:
-                return pos
-        return None
+        
+        # Disable pyautogui's fail-safe to prevent interference
+        pyautogui.FAILSAFE = False
+        
+        try:
+            for img in images:
+                try:
+                    img_path = self._resource_path(img)
+                    if not os.path.exists(img_path):
+                        print(f"Warning: Image file not found: {img_path}")
+                        continue
+                    
+                    # Try to locate the image with error handling
+                    pos = pyautogui.locateCenterOnScreen(img_path, confidence=0.7)
+                    if pos:
+                        print(f"Found username field using {img} at position: {pos}")
+                        return pos
+                except Exception as e:
+                    print(f"Error locating image {img}: {str(e)}")
+                    continue
+            
+            # If image detection fails, return a default position (center of screen)
+            # This is a fallback - users will need to manually position their cursor
+            screen_width, screen_height = pyautogui.size()
+            fallback_pos = (screen_width // 2, screen_height // 2)
+            print(f"Image detection failed, using fallback position: {fallback_pos}")
+            return fallback_pos
+            
+        except Exception as e:
+            print(f"Critical error in _find_username_field: {str(e)}")
+            return None
+        finally:
+            # Re-enable fail-safe
+            pyautogui.FAILSAFE = True
     
     def _resource_path(self, filename: str) -> str:
         """Get absolute path to resource, works for dev and for PyInstaller .exe"""

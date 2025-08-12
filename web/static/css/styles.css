@@ -11,15 +11,77 @@
     --card-bg: rgba(10, 20, 40, 0.7);
 }
 
-body {
+/* Window drag bar and control buttons */
+.window-drag-bar {
+    height: 30px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0); /* Slightly visible for dragging */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    -webkit-user-select: none; /* Prevent text selection */
+    user-select: none;
+}
+
+.window-buttons {
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.window-btn {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-left: 8px;
+    border: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer !important; /* Force pointer cursor */
+    color: #fff;
+    padding: 0;
+    line-height: 1;
+    z-index: 1001; /* Ensure buttons are clickable */
+    position: relative; /* For z-index to work */
+}
+
+.minimize-btn {
+    background-color: #FFC107;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.close-btn {
+    background-color: #F44336;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.window-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* Fix body scrollbar issue */
+html, body {
     margin: 0;
     padding: 0;
+    overflow: hidden; /* Prevent scrollbar */
+    height: 100%;
+    width: 100%;
+}
+
+body {
     font-family: 'Roboto', sans-serif;
-    background-image: url('/static/images/background.jpg');
+    background-image: url('../images/background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh;
     color: var(--text-color);
 }
 
@@ -33,6 +95,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     box-sizing: border-box;
+    padding-top: 50px; /* Add extra padding for the drag bar */
 }
 
 .header {

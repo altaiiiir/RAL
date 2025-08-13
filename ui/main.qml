@@ -147,7 +147,7 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignHCenter
                 color: accent
                 text: "Riot Auto Login"
-                font.pixelSize: 32
+                font.pixelSize: 40
                 font.bold: true
             }
 
@@ -240,6 +240,7 @@ ApplicationWindow {
                         TextField {
                             id: usernameField
                             Layout.fillWidth: true
+                            Layout.preferredHeight: 55
                             placeholderText: "Enter username"
                             color: textColor
                             background: Rectangle { color: primary; radius: 8; border.color: "#3C3C41"; border.width: 1 }
@@ -253,6 +254,7 @@ ApplicationWindow {
                         TextField {
                             id: passwordField
                             Layout.fillWidth: true
+                            Layout.preferredHeight: 55
                             echoMode: TextInput.Password
                             placeholderText: "Enter password"
                             color: textColor
@@ -266,6 +268,7 @@ ApplicationWindow {
                         ComboBox {
                             id: regionCombo
                             Layout.fillWidth: true
+                            Layout.preferredHeight: 55
                             model: regions
                             currentIndex: -1
                             displayText: currentIndex >= 0 ? currentText : "Select a region"

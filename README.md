@@ -1,103 +1,81 @@
-# Riot Auto Login
+# Riot Auto Login (RAL)
 
-A beautiful, lightweight desktop application for managing and automating League of Legends account logins.
+A modern desktop application for managing and automating Riot Client account logins with a beautiful frameless UI.
 
-## Features
+## ✨ Features
 
-- 🎨 **Modern UI** - Frameless window with League of Legends theming
-- ⚡ **Zero Latency** - Direct function calls for perfect automation timing
-- 🔐 **Account Management** - Save, edit, and delete multiple accounts
-- 🌍 **Multi-Region Support** - Works with all League regions
-- 🖱️ **Auto Login** - Automated client login using image recognition
-- 💾 **Secure Storage** - Encrypted local account storage
+- 🎨 **Modern Frameless UI** - Qt-based interface with Riot theming and glass effects
+- 🔐 **Account Management** - Save, edit, and delete multiple accounts securely
+- 🌍 **Multi-Region Support** - 20+ regions including NA, EUW, EUNE, KR, BR, and more
+- 🤖 **Auto Login** - Automated client login using image recognition and pyautogui
+- 💾 **Local Storage** - JSON-based account storage with automatic persistence
+- 🖱️ **Smart Automation** - Intelligent field detection and reliable input simulation
+- 🎯 **Zero Latency** - Direct function calls for perfect automation timing
 
-## Installation
+## 🚀 Quick Start
 
-1. **Clone the repository:**
+1. **Clone & Setup:**
    ```bash
    git clone <repository-url>
-   cd LeagueOn
-   ```
-
-2. **Create virtual environment:**
-   ```bash
+   cd RAL
    python -m venv venv
    venv\Scripts\activate  # Windows
-   # or
-   source venv/bin/activate  # Linux/Mac
-   ```
-
-3. **Install dependencies:**
-   ```bash
    pip install -r requirements.txt
    ```
 
-## Usage
+2. **Run:**
+   ```bash
+   python main.py
+   ```
 
-### Running the Application
+## 📱 Usage
 
-**Primary method (recommended):**
-```bash
-python main.py
-```
+1. **Add Account** - Enter username, password, and select region
+2. **Select Account** - Choose from saved accounts dropdown
+3. **Auto Login** - Click login to automatically authenticate with Riot Client
+4. **Manage** - Edit or delete accounts as needed
 
-**Alternative method:**
-```bash
-python app_ctk.py
-```
-
-### Using the Application
-
-1. **Add Account**: Fill in username, password, and select region, then click Save
-2. **Select Account**: Use the dropdown to choose a saved account
-3. **Login**: Click the Login button to automatically login to League client
-4. **Manage**: Edit or delete accounts as needed
-
-### Window Controls
-
-- **Minimize (—)**: Minimizes window to taskbar
-- **Close (×)**: Closes application completely
-- **Drag**: Click and drag the top area to move the window
-
-## Requirements
+## 🛠️ Requirements
 
 - Python 3.11+
 - Windows (for pyautogui automation)
-- League of Legends client
+- Riot Client installed
 
-## Dependencies
+## 📦 Dependencies
 
-- `customtkinter>=5.2.0` - Modern UI framework
-- `pyautogui>=0.9.54` - Automation library
-- `pillow>=10.0.0` - Image processing
+- `PySide6` - Qt framework for modern UI
+- `pyautogui` - Automation and image recognition
+- `pillow` - Image processing support
 
-## Building Executable
+## 🏗️ Architecture
 
-To create a standalone .exe file:
+- **`main.py`** - Application launcher
+- **`src/`** - Main source code package
+  - **`main.py`** - Application entry point
+  - **`app.py`** - Qt application core with QML integration
+  - **`controllers/`** - Business logic and automation
+  - **`models/`** - Data models and account management
+  - **`ui/`** - QML-based user interface
+- **`assets/`** - Static assets (images, icons)
+- **`resources/`** - Runtime-generated files
+
+## 🔧 Build Executable
 
 ```bash
 pip install pyinstaller
 pyinstaller --onefile --windowed --icon=icon.ico main.py
 ```
 
-## File Structure
+## 📝 Notes
 
-- `main.py` - Main entry point
-- `app_ctk.py` - CustomTkinter application
-- `app.py` - Legacy pywebview version (deprecated)
-- `controllers/` - Business logic
-- `models/` - Data models
-- `requirements.txt` - Python dependencies
+- Uses image recognition to locate login fields automatically
+- Ensure Riot Client is visible when using auto-login
+- Account data stored locally in JSON format
+- Frameless design provides modern gaming aesthetic
+- Supports all major League of Legends regions
 
-## Notes
+## 🐛 Troubleshooting
 
-- The application uses image recognition to find login fields
-- Make sure the Riot Client is visible when using auto-login
-- Account data is stored locally in encrypted format
-- The frameless window design provides a modern gaming aesthetic
-
-## Troubleshooting
-
-- **Window not appearing**: Check if positioned off-screen on multi-monitor setups
-- **Auto-login not working**: Ensure Riot Client is open and login screen is visible
-- **Dependencies issues**: Try reinstalling in a fresh virtual environment
+- **Window not visible** - Check multi-monitor positioning
+- **Auto-login fails** - Ensure Riot Client is open and login screen visible
+- **Dependencies issues** - Use fresh virtual environment

@@ -1,7 +1,7 @@
 import os
 import sys
 import threading
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 from PySide6.QtCore import QObject, Slot, Signal, QUrl, QTimer
 from PySide6.QtGui import QGuiApplication, QIcon
@@ -94,7 +94,7 @@ def main() -> None:
 
     # App title and icon
     app.setApplicationDisplayName("Riot Auto Login")
-    icon_path = resource_path("icon.ico")
+    icon_path = resource_path(os.path.join("assets", "icons", "icon.ico"))
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))
 
@@ -111,11 +111,11 @@ def main() -> None:
 
     # Expose context properties
     engine.rootContext().setContextProperty("backend", backend)
-    bg_path = resource_path("background.jpg")
+    bg_path = resource_path(os.path.join("assets", "images", "background.jpg"))
     engine.rootContext().setContextProperty("bgImageUrl", QUrl.fromLocalFile(bg_path) if os.path.exists(bg_path) else QUrl())
 
     # Load QML
-    qml_path = resource_path(os.path.join("ui", "main.qml"))
+    qml_path = resource_path(os.path.join("src", "ui", "main.qml"))
     engine.load(QUrl.fromLocalFile(qml_path))
 
     if not engine.rootObjects():
@@ -138,6 +138,15 @@ def main() -> None:
     sys.exit(app.exec())
 
 
+def resource_path(filename):
+    """Get absolute path to resource, works for dev and for PyInstaller .exe"""
+    try:
+        base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
+        return os.path.join(base_path, filename)
+    except Exception:
+        return os.path.join(os.path.abspath("."), filename)
+
+# ---- Run App ----
 if __name__ == "__main__":
     main()
 

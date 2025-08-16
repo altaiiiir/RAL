@@ -112,7 +112,7 @@ class RiotLoginController:
     
     def _find_username_field(self) -> Optional[Tuple[int, int]]:
         """Find the username input field on screen"""
-        images = ["username_field.png", "username_field_alt.png"]
+        images = ["assets/images/username_field.png", "assets/images/username_field_alt.png"]
         
         # Disable pyautogui's fail-safe to prevent interference
         pyautogui.FAILSAFE = False

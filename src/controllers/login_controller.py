@@ -13,7 +13,7 @@ class RiotLoginController:
         return [account.to_dict() for account in self.account_manager.get_all_accounts()]
     
     def get_regions(self) -> List[str]:
-        return ["NA", "EUW", "EUNE", "PBE", "KR", "BR", "LAN", "LAS", "OCE", "TR", "RU", "JP", "PH", "SG", "TW", "VN", "TH", "HK", "CN", "SEA"]
+        return ["NA", "KR", "CN", "PBE", "EUW", "EUNE", "VN", "BR", "TR", "LAN", "LAS", "RU", "OCE", "JP", "PH", "SG", "TW", "VN", "TH", "HK"]
     
     def save_account(self, username: str, password: str, region: str) -> Dict[str, Any]:
         if not username or not password or not region:
@@ -35,14 +35,19 @@ class RiotLoginController:
         except Exception as e:
             return {"success": False, "message": f"Error deleting account: {str(e)}"}
     
-    def login_to_client(self, username: str) -> Dict[str, Any]:
+    def login_to_client(self, username: str, speed: str = "Default") -> Dict[str, Any]:
         account = self.account_manager.get_account(username)
         if not account:
             return {"success": False, "message": "Account not found"}
         
         try:
             pyautogui.FAILSAFE = True
-            pyautogui.PAUSE = 0.01
+            
+            # Set speed based on user selection
+            speed_pauses = {"Fast": 0.01, "Default": 0.1, "Slow": 0.2}
+            # Extract just the speed part (before the parentheses)
+            clean_speed = speed.split(" (")[0] if " (" in speed else speed
+            pyautogui.PAUSE = speed_pauses.get(clean_speed, 0.1)
             
             riot_window = self._find_riot_client_window()
             if not riot_window:

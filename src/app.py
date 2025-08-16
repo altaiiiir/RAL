@@ -62,8 +62,8 @@ class Backend(QObject):
         except Exception as exc:
             self.notification.emit(f"Error deleting account: {exc}", "error")
 
-    @Slot(str)
-    def loginToClient(self, username: str) -> None:
+    @Slot(str, str)
+    def loginToClient(self, username: str, speed: str = "Default") -> None:
         if not username:
             self.notification.emit("Please select an account to login", "error")
             return
@@ -72,7 +72,7 @@ class Backend(QObject):
 
         def _run() -> None:
             try:
-                result: Dict[str, Any] = self.controller.login_to_client(username)
+                result: Dict[str, Any] = self.controller.login_to_client(username, speed)
                 msg_type = "success" if result.get("success") else "error"
                 self.notification.emit(result.get("message", ""), msg_type)
             except Exception as exc:
@@ -94,6 +94,10 @@ def main() -> None:
 
     # App title and icon
     app.setApplicationDisplayName("Riot Auto Login")
+    app.setApplicationName("RiotAutoLogin")
+    app.setOrganizationName("RiotAutoLogin")
+    app.setOrganizationDomain("riotautologin.com")
+    
     icon_path = resource_path(os.path.join("assets", "icons", "icon.ico"))
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))

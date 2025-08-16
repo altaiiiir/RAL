@@ -119,7 +119,7 @@ def main() -> None:
     engine.rootContext().setContextProperty("bgImageUrl", QUrl.fromLocalFile(bg_path) if os.path.exists(bg_path) else QUrl())
 
     # Load QML
-    qml_path = resource_path(os.path.join("src", "ui", "main.qml"))
+    qml_path = resource_path(os.path.join("ui", "main.qml"))
     engine.load(QUrl.fromLocalFile(qml_path))
 
     if not engine.rootObjects():
@@ -141,14 +141,6 @@ def main() -> None:
 
     sys.exit(app.exec())
 
-
-def resource_path(filename):
-    """Get absolute path to resource, works for dev and for PyInstaller .exe"""
-    try:
-        base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
-        return os.path.join(base_path, filename)
-    except Exception:
-        return os.path.join(os.path.abspath("."), filename)
 
 # ---- Run App ----
 if __name__ == "__main__":

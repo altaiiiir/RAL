@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from typing import List, Dict, Optional, Any
 
 class Account:
@@ -27,10 +28,8 @@ class Account:
 class AccountManager:
     def __init__(self, accounts_file: str = None):
         if accounts_file is None:
-            # Get the path to the resources directory (two levels up from src/models/)
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            project_root = os.path.dirname(os.path.dirname(current_dir))
-            accounts_file = os.path.join(project_root, "resources", "accounts.json")
+            # Use resource_path to get the correct path for both dev and PyInstaller
+            accounts_file = self._resource_path("accounts.json")
         
         self.accounts_file = accounts_file
         self.accounts: List[Account] = []
@@ -38,19 +37,33 @@ class AccountManager:
     
     def load_accounts(self) -> None:
         """Load accounts from JSON file"""
-        if not os.path.exists(self.accounts_file):
-            with open(self.accounts_file, "w") as f:
-                json.dump([], f)
-        
-        with open(self.accounts_file, "r") as f:
-            accounts_data = json.load(f)
-            self.accounts = [Account.from_dict(acc) for acc in accounts_data]
+        try:
+            if not os.path.exists(self.accounts_file):
+                # Create the directory if it doesn't exist
+                os.makedirs(os.path.dirname(self.accounts_file), exist_ok=True)
+                # Always start with an empty accounts list for new installations
+                with open(self.accounts_file, "w") as f:
+                    json.dump([], f)
+                self.accounts = []
+            else:
+                with open(self.accounts_file, "r") as f:
+                    accounts_data = json.load(f)
+                    self.accounts = [Account.from_dict(acc) for acc in accounts_data]
+        except Exception as e:
+            # If there's an error loading accounts, start with empty list
+            self.accounts = []
+            print(f"Warning: Could not load accounts from {self.accounts_file}: {e}")
     
     def save_accounts(self) -> None:
         """Save accounts to JSON file"""
-        with open(self.accounts_file, "w") as f:
-            accounts_data = [acc.to_dict() for acc in self.accounts]
-            json.dump(accounts_data, f, indent=2)
+        try:
+            # Create the directory if it doesn't exist
+            os.makedirs(os.path.dirname(self.accounts_file), exist_ok=True)
+            with open(self.accounts_file, "w") as f:
+                accounts_data = [acc.to_dict() for acc in self.accounts]
+                json.dump(accounts_data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving accounts to {self.accounts_file}: {e}")
     
     def add_account(self, username: str, password: str, region: str) -> Dict[str, Any]:
         """Add a new account or update existing one"""
@@ -97,4 +110,12 @@ class AccountManager:
         for i, account in enumerate(self.accounts):
             if account.username == username:
                 return i
-        return None 
+        return None
+    
+    def _resource_path(self, filename: str) -> str:
+        """Get absolute path to resource, works for dev and for PyInstaller .exe"""
+        try:
+            base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
+            return os.path.join(base_path, filename)
+        except Exception:
+            return os.path.join(os.path.abspath("."), filename) 

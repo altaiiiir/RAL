@@ -25,7 +25,13 @@ class Account:
 
 
 class AccountManager:
-    def __init__(self, accounts_file: str = "accounts.json"):
+    def __init__(self, accounts_file: str = None):
+        if accounts_file is None:
+            # Get the path to the resources directory (two levels up from src/models/)
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            project_root = os.path.dirname(os.path.dirname(current_dir))
+            accounts_file = os.path.join(project_root, "resources", "accounts.json")
+        
         self.accounts_file = accounts_file
         self.accounts: List[Account] = []
         self.load_accounts()

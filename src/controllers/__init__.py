@@ -1,3 +1,3 @@
-from controllers.login_controller import RiotLoginController, REGIONS
+from controllers.login_controller import RiotLoginController
 
-__all__ = ['RiotLoginController', 'REGIONS'] 
+__all__ = ['RiotLoginController'] 

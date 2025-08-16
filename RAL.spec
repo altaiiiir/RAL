@@ -9,7 +9,6 @@ a = Analysis(
     datas=[
         ('src/ui/main.qml', 'ui'),
         ('src/accounts_template.json', 'accounts.json'),
-        ('assets/icons/icon.ico', 'assets/icons'),
         ('assets/images/background.jpg', 'assets/images'),
     ],
     hiddenimports=[],
@@ -45,5 +44,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='icon.ico'
+    icon='assets/icons/icon.ico'
 )

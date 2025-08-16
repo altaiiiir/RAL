@@ -1,0 +1,30 @@
+name: Build & Release (Semantic)
+on:
+  push:
+    tags:
+      - "v*.*.*"
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+      - name: Build with PyInstaller
+        run: pyinstaller --noconfirm RAL.spec
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          artifacts: "dist/**/*.exe"
+          draft: false
+          prerelease: false

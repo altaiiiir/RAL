@@ -13,7 +13,6 @@ build/
 
 # PyInstaller
 *.manifest
-*.spec
 
 # Installer logs
 pip-log.txt

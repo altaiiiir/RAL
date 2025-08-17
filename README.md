@@ -1,6 +1,6 @@
 # Riot Auto Login (RAL)
 
-Sick of having to always copy and paste to switch to your smurf accounts? RAL is a lightweight app for managing and automating Riot Client account logins with a single click of a button!
+Sick of having to always copy and paste to switch to your smurf accounts? RAL is a lightweight Open-Source tool for managing and automating Riot Client account logins with a single click of a button!
 
 ## ✨ Features
 

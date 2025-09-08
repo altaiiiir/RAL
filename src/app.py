@@ -85,7 +85,8 @@ def resource_path(relative_path: str) -> str:
     try:
         base_path = sys._MEIPASS  # type: ignore[attr-defined]
     except Exception:
-        base_path = os.path.abspath(".")
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        base_path = os.path.dirname(script_dir)
     return os.path.join(base_path, relative_path)
 
 
@@ -119,7 +120,9 @@ def main() -> None:
     engine.rootContext().setContextProperty("bgImageUrl", QUrl.fromLocalFile(bg_path) if os.path.exists(bg_path) else QUrl())
 
     # Load QML
-    qml_path = resource_path(os.path.join("ui", "main.qml"))
+    qml_path = resource_path(os.path.join("src", "ui", "main.qml"))
+    print(f"QML path: {qml_path}")
+    print(f"QML exists: {os.path.exists(qml_path)}")
     engine.load(QUrl.fromLocalFile(qml_path))
 
     if not engine.rootObjects():

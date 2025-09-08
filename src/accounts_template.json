@@ -1,1 +1,6 @@
-[]
+{
+  "accounts": [],
+  "settings": {
+    "speed": 1
+  }
+}

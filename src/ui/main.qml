@@ -58,58 +58,20 @@ ApplicationWindow {
     
     // ===== Settings =====
     property int currentSpeed: 1
+    property bool isLoadingSettings: true
     
     // Auto-save speed setting when it changes
     onCurrentSpeedChanged: {
-        try {
-            saveSetting("speed", currentSpeed)
-        } catch (e) {
-            console.log("Could not save speed setting:", e)
+        if (!isLoadingSettings) {
+            backend.setSpeedSetting(currentSpeed)
         }
     }
     
-    // Functions to save and load settings
-    function saveSetting(key, value) {
-        try {
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?, ?)', [key, value])
-            })
-        } catch (e) {
-            console.log("Save setting error:", e)
-        }
-    }
-    
-    function loadSetting(key, defaultValue) {
-        try {
-            var result = defaultValue
-            db.transaction(function(tx) {
-                var rs = tx.executeSql('SELECT value FROM settings WHERE key = ?', [key])
-                if (rs.rows.length > 0) {
-                    result = parseInt(rs.rows.item(0).value)
-                }
-            })
-            return result
-        } catch (e) {
-            console.log("Load setting error:", e)
-            return defaultValue
-        }
-    }
-    
-    // ===== Settings Persistence =====
-    property var db: LocalStorage.openDatabaseSync("RiotAutoLogin", "1.0", "Settings", 1000000)
-    
-    // Initialize database, load settings, and set window flags
+    // Initialize and load settings
     Component.onCompleted: {
-        try {
-            db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT)')
-            })
-        } catch (e) {
-            console.log("Database init error:", e)
-        }
-        
-        // Load saved settings
-        currentSpeed = loadSetting("speed", 1)
+        // Load saved speed setting from backend
+        currentSpeed = backend.getSpeedSetting()
+        isLoadingSettings = false  // Enable auto-save after initial load
         
         // Match initial top-most behavior for ~2 seconds
         Qt.callLater(function() { window.flags = Qt.FramelessWindowHint | Qt.Window })

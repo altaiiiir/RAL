@@ -15,6 +15,18 @@ class RiotLoginController:
     def get_regions(self) -> List[str]:
         return ["NA", "KR", "CN", "PBE", "EUW", "EUNE", "VN", "BR", "TR", "LAN", "LAS", "RU", "OCE", "JP", "PH", "SG", "TW", "VN", "TH", "HK"]
     
+    def get_speed_setting(self) -> int:
+        """Get the current speed setting"""
+        return self.account_manager.get_speed_setting()
+    
+    def set_speed_setting(self, speed: int) -> Dict[str, Any]:
+        """Set the speed setting"""
+        try:
+            self.account_manager.set_speed_setting(speed)
+            return {"success": True, "message": f"Speed setting updated to {['Slow', 'Default', 'Fast'][speed]}"}
+        except Exception as e:
+            return {"success": False, "message": f"Error saving speed setting: {str(e)}"}
+    
     def save_account(self, username: str, password: str, region: str) -> Dict[str, Any]:
         if not username or not password or not region:
             return {"success": False, "message": "Username, password, and region are required"}

@@ -33,46 +33,64 @@ class AccountManager:
         
         self.accounts_file = accounts_file
         self.accounts: List[Account] = []
+        self.settings: Dict[str, Any] = {}
         self.load_accounts()
     
     def load_accounts(self) -> None:
-        """Load accounts from JSON file"""
+        """Load accounts and settings from JSON file"""
         try:
             if not os.path.exists(self.accounts_file):
                 # Create the directory if it doesn't exist
                 os.makedirs(os.path.dirname(self.accounts_file), exist_ok=True)
 
-                template_data = []
+                template_data = {"accounts": [], "settings": {"speed": 1}}
                 
                 if getattr(sys, 'frozen', False):
                     try:
                         template_path = os.path.join(sys._MEIPASS, 'accounts.json')
                         if os.path.exists(template_path):
                             with open(template_path, 'r') as f:
-                                template_data =  json.load(f)
+                                template_data = json.load(f)
+                                
+                                if "settings" not in template_data:
+                                    template_data["settings"] = {"speed": 1}
                     except Exception:
                         pass
                 
                 with open(self.accounts_file, "w") as f:
                     json.dump(template_data, f)
                 self.accounts = []
+                self.settings = template_data.get("settings", {"speed": 1})
             else:
                 with open(self.accounts_file, "r") as f:
-                    accounts_data = json.load(f)
-                    self.accounts = [Account.from_dict(acc) for acc in accounts_data]
+                    data = json.load(f)
+                    # Handle both old format (list) and new format (dict)
+                    if isinstance(data, list):
+                        # Old format - migrate to new format
+                        self.accounts = [Account.from_dict(acc) for acc in data]
+                        self.settings = {"speed": 1}
+                        self.save_accounts()  # Save in new format
+                    else:
+                        # New format
+                        self.accounts = [Account.from_dict(acc) for acc in data.get("accounts", [])]
+                        self.settings = data.get("settings", {"speed": 1})
         except Exception as e:
             # If there's an error loading accounts, start with empty list
             self.accounts = []
+            self.settings = {"speed": 1}
             print(f"Warning: Could not load accounts from {self.accounts_file}: {e}")
     
     def save_accounts(self) -> None:
-        """Save accounts to JSON file"""
+        """Save accounts and settings to JSON file"""
         try:
             # Create the directory if it doesn't exist
             os.makedirs(os.path.dirname(self.accounts_file), exist_ok=True)
             with open(self.accounts_file, "w") as f:
-                accounts_data = [acc.to_dict() for acc in self.accounts]
-                json.dump(accounts_data, f, indent=2)
+                data = {
+                    "accounts": [acc.to_dict() for acc in self.accounts],
+                    "settings": self.settings
+                }
+                json.dump(data, f, indent=2)
         except Exception as e:
             print(f"Error saving accounts to {self.accounts_file}: {e}")
     
@@ -122,6 +140,15 @@ class AccountManager:
             if account.username == username:
                 return i
         return None
+    
+    def get_speed_setting(self) -> int:
+        """Get the current speed setting"""
+        return self.settings.get("speed", 1)
+    
+    def set_speed_setting(self, speed: int) -> None:
+        """Set the speed setting and save to file"""
+        self.settings["speed"] = speed
+        self.save_accounts()
     
     def _resource_path(self, filename: str) -> str:
         """Get absolute path to resource, works for dev and for PyInstaller .exe"""

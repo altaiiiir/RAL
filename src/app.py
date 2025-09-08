@@ -80,6 +80,27 @@ class Backend(QObject):
 
         threading.Thread(target=_run, daemon=True).start()
 
+    @Slot(result=int)
+    def getSpeedSetting(self) -> int:
+        """Get the current speed setting"""
+        try:
+            return self.controller.get_speed_setting()
+        except Exception as exc:
+            self.notification.emit(f"Error loading speed setting: {exc}", "error")
+            return 1  # Default to "Default" speed
+
+    @Slot(int)
+    def setSpeedSetting(self, speed: int) -> None:
+        """Set the speed setting"""
+        try:
+            result: Dict[str, Any] = self.controller.set_speed_setting(speed)
+            if result.get("success"):
+                self.notification.emit(result.get("message", "Speed setting saved"), "success")
+            else:
+                self.notification.emit(result.get("message", "Error saving speed setting"), "error")
+        except Exception as exc:
+            self.notification.emit(f"Error saving speed setting: {exc}", "error")
+
 
 def resource_path(relative_path: str) -> str:
     try:

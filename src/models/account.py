@@ -41,9 +41,20 @@ class AccountManager:
             if not os.path.exists(self.accounts_file):
                 # Create the directory if it doesn't exist
                 os.makedirs(os.path.dirname(self.accounts_file), exist_ok=True)
-                # Always start with an empty accounts list for new installations
+
+                template_data = []
+                # Try to copy from bundled template
+                if getattr(sys, 'frozen', False):
+                    try:
+                        template_path = os.path.join(sys._MEIPASS, 'accounts.json')
+                        if os.path.exists(template_path):
+                            with open(template_path, 'r') as f:
+                                template_data =  json.load(f)
+                    except Exception:
+                        pass
+                
                 with open(self.accounts_file, "w") as f:
-                    json.dump([], f)
+                    json.dump(template_data, f)
                 self.accounts = []
             else:
                 with open(self.accounts_file, "r") as f:
@@ -114,8 +125,11 @@ class AccountManager:
     
     def _resource_path(self, filename: str) -> str:
         """Get absolute path to resource, works for dev and for PyInstaller .exe"""
-        try:
-            base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
-            return os.path.join(base_path, filename)
-        except Exception:
+        if getattr(sys, 'frozen', False):
+            # use AppData for storage for executable
+            appdata_dir = os.path.join(os.environ.get('APPDATA', ''), 'RiotAutoLogin')
+            os.makedirs(appdata_dir, exist_ok=True)
+            return os.path.join(appdata_dir, filename)
+        else:
+            # use current directory for dev
             return os.path.join(os.path.abspath("."), filename) 

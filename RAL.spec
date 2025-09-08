@@ -7,7 +7,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('src/ui/main.qml', 'ui'),
+        ('src/ui/main.qml', 'src/ui'),
         ('src/accounts_template.json', 'accounts.json'),
         ('assets/images/background.jpg', 'assets/images'),
         ('assets/icons/icon.ico', 'assets/icons'),

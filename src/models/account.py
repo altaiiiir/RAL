@@ -43,7 +43,7 @@ class AccountManager:
                 os.makedirs(os.path.dirname(self.accounts_file), exist_ok=True)
 
                 template_data = []
-                # Try to copy from bundled template
+                
                 if getattr(sys, 'frozen', False):
                     try:
                         template_path = os.path.join(sys._MEIPASS, 'accounts.json')

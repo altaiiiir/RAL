@@ -1,7 +1,7 @@
 import os
 import json
 import sys
-import time
+
 import pyautogui
 from tkinter import messagebox
 from PIL import Image, ImageTk
@@ -115,7 +115,7 @@ class LeagueAutoLoginApp:
     def find_username_field(self):
         images = ["username_field.png", "username_field_alt.png"]
         for img in images:
-            pos = pyautogui.locateCenterOnScreen(resource_path(img), confidence=0.8)
+            pos = pyautogui.locateCenterOnScreen(resource_path(img), confidence=0.7)
             if pos:
                 return pos
         return None
@@ -148,8 +148,14 @@ class LeagueAutoLoginApp:
     def add_account(self):
         new_user = self.user_entry.get().strip()
         new_pass = self.pass_entry.get().strip()
+
         if not new_user or not new_pass:
             messagebox.showwarning("Missing Info", "Username and password required.")
+            return
+
+        # Check for existing username
+        if any(account["username"] == new_user for account in self.accounts):
+            messagebox.showwarning("Account Exists", "Account already exists.")
             return
 
         self.accounts.append({"username": new_user, "password": new_pass})

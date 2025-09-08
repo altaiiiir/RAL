@@ -10,6 +10,7 @@ a = Analysis(
         ('src/ui/main.qml', 'ui'),
         ('src/accounts_template.json', 'accounts.json'),
         ('assets/images/background.jpg', 'assets/images'),
+        ('assets/icons/icon.ico', 'assets/icons'),
     ],
     hiddenimports=[],
     hookspath=[],

@@ -20,11 +20,13 @@ jobs:
           pip install -r requirements.txt pyinstaller
       - name: Build with PyInstaller
         run: pyinstaller --noconfirm RAL.spec
+      - name: Zip dist
+        run: Compress-Archive -Path dist/RAL/* -DestinationPath dist/RAL.zip
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          artifacts: "dist/**/*.exe"
+          artifacts: "dist/RAL.zip"
           draft: false
           prerelease: false
